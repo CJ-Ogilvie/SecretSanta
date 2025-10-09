@@ -1,0 +1,32 @@
+C.J.:
+  exclusions:
+    - Kiya
+    - Justine
+Kiya:
+  exclusions:
+    - C.J.
+    - Jamie
+Justine:
+  exclusions:
+    - Brayden
+    - Kiya
+Brayden:
+  exclusions:
+    - Justine
+    - Bailey
+Bailey:
+  exclusions:
+    - Ryley
+    - Brayden
+Ryley:
+  exclusions:
+    - Bailey
+    - Clay
+Clay:
+  exclusions:
+    - Jamie
+    - C.J.
+Jamie:
+  exclusions:
+    - Clay
+    - Ryley
