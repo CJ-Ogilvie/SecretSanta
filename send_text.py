@@ -1,3 +1,4 @@
+import atexit
 import smtplib
 from get_secure_data import get_email_address, get_phone_number, get_email_password
 
@@ -25,9 +26,15 @@ class _EmailToTextConnection:
         self.email = get_email_address()
         self.server.login(self.email, get_email_password())
 
-
-    def __del__(self):
-        self.server.quit()
+    def close(self):
+        if self.server is None:
+            return  # Already closed
+        try:
+            self.server.quit()
+        except smtplib.SMTPException:
+            pass  # The server already dropped the connection, there is nothing left to clean up
+        finally:
+            self.server = None
 
     def send_message(self, message: str, name: str):
         target = _get_target_address(name)
@@ -45,6 +52,18 @@ def send_message(message: str, name: str) -> None:
     print(f"Sending message to {name}")
     MessageConnection.send_message(message, name)
     print("Message send complete.")
+
+
+def close_connection() -> None:
+    # Closed explicitly rather than in '__del__', which runs too late in interpreter shutdown to use the socket
+    global MessageConnection
+    if MessageConnection is not None:
+        print("Closing message connection")
+        MessageConnection.close()
+        MessageConnection = None
+
+
+atexit.register(close_connection)
 
 
 if __name__ == "__main__":
